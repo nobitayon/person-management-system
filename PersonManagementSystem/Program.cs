@@ -48,13 +48,23 @@ namespace PersonManagementSystem
 
             public void printMenu()
             {
+
+                string[] menuOptions = new string[]
+                {
+                    "Print all users",
+                    "Add user",
+                    "Edit user",
+                    "Search user",
+                    "Remove user",
+                    "Exit"
+                };
+
                 Console.WriteLine("Welcome to my management system" + Environment.NewLine);
-                Console.WriteLine("1. Print all users");
-                Console.WriteLine("2. Add user");
-                Console.WriteLine("3. Edit user");
-                Console.WriteLine("4. Search user");
-                Console.WriteLine("5. Remove user");
-                Console.WriteLine("6. Exit");
+                
+                for(int i = 0; i < menuOptions.Length; i++)
+                {
+                    Console.WriteLine((i+1)+". " + menuOptions[i]);
+                }
 
                 Console.Write("Enter your menu option: ");
 
@@ -83,7 +93,7 @@ namespace PersonManagementSystem
                         RemovePerson();
                     }
 
-                    if(menuOption>=1 && menuOption <= 5)
+                    if(menuOption>=1 && menuOption <= menuOptions.Length-1)
                     {
                         printMenu();
                     }
