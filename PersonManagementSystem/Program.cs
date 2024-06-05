@@ -38,7 +38,11 @@ namespace PersonManagementSystem
 
             public Manager()
             {
-                people = new List<Person>(){};
+                people = new List<Person>(){
+                    new("totti",30),
+                    new("toni",33),
+                    new("gian",20)
+                };
                 printMenu();
             }
 
@@ -101,10 +105,7 @@ namespace PersonManagementSystem
                 }
                 else
                 {
-                    for (int i = 0; i < people.Count; i++)
-                    {
-                        Console.WriteLine(i + 1 + ". " + people[i].returnDetails());
-                    }
+                    PrintAllUsers();
                 }
 
                 
@@ -148,30 +149,16 @@ namespace PersonManagementSystem
 
                 try
                 {
-                    Console.Write("Enter a name: ");
-                    string nameInput = Console.ReadLine();
-
-                    Console.Write("Enter a age: ");
-                    int ageInput = Convert.ToInt32(Console.ReadLine());
-
-                    if (!string.IsNullOrEmpty(nameInput))
+                    Person person = returnPerson();
+                    if (person != null)
                     {
-                        if(ageInput>=0 && ageInput <= 150)
-                        {
-                            Person person = new Person(nameInput, ageInput);
-                            people.Add(person);
-                            Console.WriteLine("Successfully added a person.");
-                            finishOption();
-                        }
-                        else
-                        {
-                            OutputMessage("Enter a sensible age");
-                            AddPerson();
-                        }
+                        people.Add(person);
+                        Console.WriteLine("Successfully added a person.");
+                        finishOption();
                     }
                     else
                     {
-                        OutputMessage("You didn't enter a name");
+                        OutputMessage("Something has went wrong.");
                         AddPerson();
                     }
                 
@@ -182,7 +169,7 @@ namespace PersonManagementSystem
                     AddPerson();
                 }
 
-                
+   
             }
 
             public void EditPerson()
@@ -196,19 +183,87 @@ namespace PersonManagementSystem
                 // edit user, print message
                 // return back to the menu
 
-                finishOption();
-                finishOption();
+                if (people.Count == 0)
+                {
+                    Console.WriteLine("No users to edit. Use the menu to add a user.");
+                }
+                else
+                {
+                    PrintAllUsers();
+                    try
+                    {
+                        Console.Write("Enter an index: ");
+                        int indexSelection = Convert.ToInt32(Console.ReadLine());
+                        indexSelection -= 1;
+
+                        if (indexSelection>=0 && indexSelection <= people.Count - 1)
+                        {
+
+                            try
+                            {
+                                Person person = returnPerson();
+                                if (person != null)
+                                {
+                                    people[indexSelection] = person;
+                                    Console.WriteLine("Successfully edited a person.");
+                                    finishOption();
+                                }
+                                else
+                                {
+                                    OutputMessage("Something has went wrong.");
+                                    EditPerson();
+                                }
+
+                            }
+                            catch (Exception)
+                            {
+                                OutputMessage("Something has went wrong. Press <Enter> to try again.");
+                                EditPerson();
+                            }
+                        }
+                        else
+                        {
+                            OutputMessage("Enter a valid index range.");
+                            EditPerson();
+                        }
+
+                    }
+                    catch(Exception) 
+                    {
+                        OutputMessage("Something went wrong.");
+                        EditPerson();
+                    }
+                    
+                }
+
             }
 
             public void SearchPerson()
             {
                 StartOption("Searching a user:");
+
+                // check if people in system
+                // get name input
+                // validate name
+                // loop and check for name
+                // output results
+
                 finishOption();
             }
 
             public void RemovePerson()
             {
                 StartOption("Removing a user:");
+
+                // check if people in system
+                // output list of users
+                // input selection
+                // validation selection
+                // print message
+                // return back to the menu
+
+
+
                 finishOption();
             }
 
@@ -230,9 +285,53 @@ namespace PersonManagementSystem
             public void OutputMessage(string message) 
             {
                 Console.WriteLine(message+" Press <Enter> to try again.");
+                
                 Console.ReadLine(); 
                 Console.Clear();
             }
+
+            public void PrintAllUsers()
+            {
+                for (int i = 0; i < people.Count; i++)
+                {
+                    Console.WriteLine(i + 1 + ". " + people[i].returnDetails());
+                }
+            }
+
+            public Person returnPerson()
+            {
+                try
+                {
+                    Console.Write("Enter a name: ");
+                    string nameInput = Console.ReadLine();
+
+                    Console.Write("Enter a age: ");
+                    int ageInput = Convert.ToInt32(Console.ReadLine());
+
+                    if (!string.IsNullOrEmpty(nameInput))
+                    {
+                        if (ageInput >= 0 && ageInput <= 150)
+                        {
+                            return new Person(nameInput, ageInput);
+                        }
+                        else
+                        {
+                            OutputMessage("Enter a sensible age");
+                        }
+                    }
+                    else
+                    {
+                        OutputMessage("You didn't enter a name");
+                    }
+
+                }
+                catch (Exception)
+                {
+                    OutputMessage("Something has went wrong. Press <Enter> to try again.");
+                }
+                return null;
+            }
+
         }
 
         static void Main(string[] args)
