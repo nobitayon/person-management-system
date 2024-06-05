@@ -39,9 +39,9 @@ namespace PersonManagementSystem
             public Manager()
             {
                 people = new List<Person>(){
-                    new("totti",30),
-                    new("toni",33),
-                    new("gian",20)
+                    //new("totti",30),
+                    //new("toni",33),
+                    //new("gian",20)
                 };
                 printMenu();
             }
@@ -83,7 +83,12 @@ namespace PersonManagementSystem
                         RemovePerson();
                     }
 
-                    printMenu();
+                    if(menuOption>=1 && menuOption <= 5)
+                    {
+                        printMenu();
+                    }
+
+                    
                 }
                 else
                 {
@@ -99,17 +104,10 @@ namespace PersonManagementSystem
 
                 // print all element of people
 
-                if (people.Count == 0)
-                {
-                    Console.WriteLine("There are no users in the system, use option 1 to create a user");
-                }
-                else
+                if (!isSystemEmpty())
                 {
                     PrintAllUsers();
                 }
-
-                
-
                 finishOption();
 
 
@@ -183,11 +181,7 @@ namespace PersonManagementSystem
                 // edit user, print message
                 // return back to the menu
 
-                if (people.Count == 0)
-                {
-                    Console.WriteLine("No users to edit. Use the menu to add a user.");
-                }
-                else
+                if(!isSystemEmpty())
                 {
                     PrintAllUsers();
                     try
@@ -233,7 +227,11 @@ namespace PersonManagementSystem
                         OutputMessage("Something went wrong.");
                         EditPerson();
                     }
-                    
+
+                }
+                else
+                {
+                    OutputMessage("");
                 }
 
             }
@@ -248,7 +246,35 @@ namespace PersonManagementSystem
                 // loop and check for name
                 // output results
 
-                finishOption();
+                if(!isSystemEmpty())
+                {
+                    Console.Write("Enter a name: ");
+                    string nameInput = Console.ReadLine();
+                    bool bFound = false;
+                    if (!string.IsNullOrEmpty(nameInput))
+                    {
+                        for(int i = 0; i < people.Count; i++)
+                        {
+                            if (people[i].name.ToLower().Contains(nameInput))
+                            {
+                                Console.WriteLine(people[i].returnDetails());
+                                bFound = true;
+                            }
+                        }
+
+                        if (!bFound)
+                        {
+                            Console.WriteLine("No user found with that name");
+                        }
+                      
+
+                        finishOption();
+                    }
+                }
+                else
+                {
+                    OutputMessage("");
+                }
             }
 
             public void RemovePerson()
@@ -262,9 +288,29 @@ namespace PersonManagementSystem
                 // print message
                 // return back to the menu
 
+                if(!isSystemEmpty())
+                {
+                    PrintAllUsers();
+                    Console.Write("Enter an index: ");
+                    int index = Convert.ToInt32(Console.ReadLine());
+                    index -= 1;
 
-
-                finishOption();
+                    if(index>=0 && index <= people.Count - 1)
+                    {
+                        people.RemoveAt(index);
+                        Console.WriteLine("Successfully removed a person");
+                        finishOption();
+                    }
+                    else
+                    {
+                        OutputMessage("Enter a valid index inside the range.");
+                        RemovePerson();
+                    }
+                }
+                else
+                {
+                    OutputMessage("");
+                }
             }
 
             public void finishOption()
@@ -284,7 +330,16 @@ namespace PersonManagementSystem
 
             public void OutputMessage(string message) 
             {
-                Console.WriteLine(message+" Press <Enter> to try again.");
+
+                if (message == "")
+                {
+                    Console.Write("Press <Enter> to return to the menu");
+                }
+                else
+                {
+                    Console.WriteLine(message + " Press <Enter> to try again.");
+                }
+                
                 
                 Console.ReadLine(); 
                 Console.Clear();
@@ -332,6 +387,20 @@ namespace PersonManagementSystem
                 return null;
             }
 
+            public bool isSystemEmpty()
+            {
+                if(people.Count == 0)
+                {
+                    Console.WriteLine("There are no users in the system.");
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+
         }
 
         static void Main(string[] args)
@@ -347,7 +416,7 @@ namespace PersonManagementSystem
 
             Manager manager = new Manager();
 
-
+            Console.WriteLine("Goodbye!");
             Console.ReadLine();  
         }
     }
