@@ -38,13 +38,7 @@ namespace PersonManagementSystem
 
             public Manager()
             {
-                people = new List<Person>()
-                {
-                    new Person("totti",42),
-                    new Person("mario",33),
-                    new Person("de rossi",45),
-
-                };
+                people = new List<Person>(){};
                 printMenu();
             }
 
@@ -90,29 +84,32 @@ namespace PersonManagementSystem
                 else
                 {
                     // failed
-                    Console.WriteLine("Incorrect menu choice.");
-                    Console.WriteLine("Press <Enter> to try again.");
-                    Console.ReadLine();
-                    Console.Clear();
+                    OutputMessage("Incorrect menu choice.");
                     printMenu();
                 }
             }
 
             public void PrintAll()
             {
-                Console.Clear();
-
-                Console.WriteLine("Printing all users:" + Environment.NewLine);
+                StartOption("Printing all users:");
 
                 // print all element of people
 
-                for (int i = 0; i < people.Count; i++) { 
-                    Console.WriteLine(i+1+". " + people[i].returnDetails());
+                if (people.Count == 0)
+                {
+                    Console.WriteLine("There are no users in the system, use option 1 to create a user");
+                }
+                else
+                {
+                    for (int i = 0; i < people.Count; i++)
+                    {
+                        Console.WriteLine(i + 1 + ". " + people[i].returnDetails());
+                    }
                 }
 
-                Console.WriteLine("You have finished this option. Press <Enter> to return to the menu.");
-                Console.ReadLine();
-                Console.Clear();
+                
+
+                finishOption();
 
 
                 // another alternative
@@ -141,22 +138,100 @@ namespace PersonManagementSystem
 
             public void AddPerson()
             {
-                Console.WriteLine("add");
+                StartOption("Adding a user:");
+
+                // enter a name
+                // enter an age
+                // create a person class
+                // add to the list
+                // return to the menu
+
+                try
+                {
+                    Console.Write("Enter a name: ");
+                    string nameInput = Console.ReadLine();
+
+                    Console.Write("Enter a age: ");
+                    int ageInput = Convert.ToInt32(Console.ReadLine());
+
+                    if (!string.IsNullOrEmpty(nameInput))
+                    {
+                        if(ageInput>=0 && ageInput <= 150)
+                        {
+                            Person person = new Person(nameInput, ageInput);
+                            people.Add(person);
+                            Console.WriteLine("Successfully added a person.");
+                            finishOption();
+                        }
+                        else
+                        {
+                            OutputMessage("Enter a sensible age");
+                            AddPerson();
+                        }
+                    }
+                    else
+                    {
+                        OutputMessage("You didn't enter a name");
+                        AddPerson();
+                    }
+                
+                }
+                catch (Exception) 
+                {
+                    OutputMessage("Something has went wrong. Press <Enter> to try again.");
+                    AddPerson();
+                }
+
+                
             }
 
             public void EditPerson()
             {
-                Console.WriteLine("edit");
+                StartOption("Editing a user:");
+
+                // check if people in the system
+                // print all
+                // allow selection
+                // validate selection
+                // edit user, print message
+                // return back to the menu
+
+                finishOption();
+                finishOption();
             }
 
             public void SearchPerson()
             {
-                Console.WriteLine("search");
+                StartOption("Searching a user:");
+                finishOption();
             }
 
             public void RemovePerson()
             {
-                Console.WriteLine("remove");
+                StartOption("Removing a user:");
+                finishOption();
+            }
+
+            public void finishOption()
+            {
+                Console.WriteLine(Environment.NewLine + "You have finished this option. Press <Enter> to return to the menu.");
+                
+                Console.ReadLine();
+                Console.Clear();
+            
+            }
+
+            public void StartOption(string message)
+            {
+                Console.Clear();
+                Console.WriteLine(message + Environment.NewLine);
+            }
+
+            public void OutputMessage(string message) 
+            {
+                Console.WriteLine(message+" Press <Enter> to try again.");
+                Console.ReadLine(); 
+                Console.Clear();
             }
         }
 
